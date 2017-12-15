@@ -11,6 +11,7 @@ import {EventModel} from './event-model';
 export class ListdemoComponent {
   // XSS challenge, image tag src, miau szöveggel alert!
   events: EventModel[];
+  modifyEvent: EventModel;
 
   constructor() {
     this.events = [
@@ -40,13 +41,41 @@ export class ListdemoComponent {
     //   // }
     // }).id;
     // console.log(puf);
+    this.modifyEvent = new EventModel('');
   }
 
-  add(newEventNameInput: HTMLInputElement, newEventPicInput: HTMLInputElement) {
-    const maxId = this.events.reduce((x, y) => x.id > y.id ? x : y).id;
-    this.events = [...this.events, new EventModel(maxId + 1, newEventNameInput.value, newEventPicInput.value)];
+  save(newEventNameInput: HTMLInputElement, newEventPicInput: HTMLInputElement) {
+    if (this.modifyEvent.id === 0) {
+      // itt tudjuk, hogy új elemet hozunk létre
+      // biztosítjuk, hogy ID=0 legyen
+      const maxId = this.events.reduce((x, y) => x.id > y.id ? x : y).id;
+      this.events = [...this.events, new EventModel(newEventNameInput.value, maxId + 1, newEventPicInput.value)];
+    } else {
+      // itt tudjuk, hogy EDIT szakasz van, meg kell keresni a megfelelő elemet az ID alapján
+      this.events = this.events.map((ev) => {
+        if (ev.id === this.modifyEvent.id) {
+          // itt tudjuk, hogy ezt az elemet kell szerkeszteni
+          return {
+            id: ev.id,
+            name: newEventNameInput.value,
+            pic: newEventPicInput.value
+          };
+        } else {
+          // itt tudjuk, hogy nem akarunk módosítnai
+          return ev;
+        }
+      });
+      // takarítsunk fel magunk után
+      this.modifyEvent = new EventModel('');
+    }
     newEventNameInput.value = '';
     newEventPicInput.value = '';
+  }
+
+  edit(id: number) {
+    // ha biztos hogy van ilyen id
+    // ha tudom hogy mindíg csak 1 ilyen van
+    this.modifyEvent = this.events.filter((ev) => ev.id === id)[0];
   }
 
   delete(id: number) {
