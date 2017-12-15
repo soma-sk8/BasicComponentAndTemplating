@@ -6,8 +6,14 @@
   </li>
 </ul>
 
-<!--mutató létrehozása-->
-<input type="text" #newEventNameInput>
-<button (click)="add(newEventNameInput)">Save</button>
+<div>
+<label for="eventname">Új esemény neve:</label>
+<input type="text" #newEventNameInput id="eventname">
+</div>
+<div>
+<label for="eventpic">Kép elérése</label>
+<input type="text" #newEventPicInput id="eventpic">
+</div>
+<button (click)="add(newEventNameInput, newEventPicInput)">Save</button>
 
 <pre>{{events| json}}</pre>

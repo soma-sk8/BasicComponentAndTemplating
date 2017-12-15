@@ -42,10 +42,11 @@ export class ListdemoComponent {
     // console.log(puf);
   }
 
-  add(newEventNameInput: HTMLInputElement) {
+  add(newEventNameInput: HTMLInputElement, newEventPicInput: HTMLInputElement) {
     const maxId = this.events.reduce((x, y) => x.id > y.id ? x : y).id;
-    this.events = [...this.events, new EventModel(maxId + 1, newEventNameInput.value)];
+    this.events = [...this.events, new EventModel(maxId + 1, newEventNameInput.value, newEventPicInput.value)];
     newEventNameInput.value = '';
+    newEventPicInput.value = '';
   }
 
   delete(id: number) {
